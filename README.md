@@ -14,8 +14,7 @@ An extensive experimental study was performed on 24 simulated and 15 real-world 
 - **real_data** contains the biological scRNA-seq data, downloaded from scDeepCluster, as detailed below
 - train.py contains the main functionalities for training and evaluating the model results
 - model.py contains the network definition
-- st_loss.py contains the implementation of the loss functions
-- utils.py contains various utility functions
+
 
 ### Overview of notebooks
 - **Main.ipynb** represents the main entry point, contains code snipped to train the model on scRNA-seq data

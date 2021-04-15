@@ -196,11 +196,13 @@ def run_leiden(data, leiden_n_neighbors=300):
 
 
 def evaluate(model, dataloader, n_clusters, plot=False, save=False, cluster=["KMeans"], use_cpu=False):
-    """[summary]
+    """
+    Test the graph autoencoder model.
 
     Args:
         model ([type]): [description]
         dataloader ([type]): [description]
+        n_clusters ([type]): [description]
         plot (bool, optional): [description]. Defaults to False.
         save (bool, optional): [description]. Defaults to False.
         cluster (list, optional): [description]. Defaults to ["KMeans"].
@@ -302,17 +304,23 @@ def evaluate(model, dataloader, n_clusters, plot=False, save=False, cluster=["KM
 
 
 def train(model, optim, n_epochs, dataloader, n_clusters, plot=False, save=False, cluster=["KMeans"], use_cpu=False):
-    """[summary]
+    """
+    Train the graph autoencoder model (model) with the given optimizer (optim)
+    for n_epochs.
 
     Args:
         model ([type]): [description]
         optim ([type]): [description]
         n_epochs ([type]): [description]
         dataloader ([type]): [description]
+        n_clusters ([type]): [description]
         plot (bool, optional): [description]. Defaults to False.
         save (bool, optional): [description]. Defaults to False.
         cluster (list, optional): [description]. Defaults to ["KMeans"].
         use_cpu (bool, optional): [description]. Defaults to False.
+
+    Returns:
+        [type]: [description]
     """
     device = get_device(use_cpu=use_cpu)
     losses = []
