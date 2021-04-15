@@ -1,0 +1,13 @@
+xtick.labelsize: 12
+ytick.labelsize: 12
+font.size: 12
+#figure.autolayout: False
+#figure.figsize: 7.2,4.45
+axes.titlesize : 13
+axes.labelsize : 12
+lines.linewidth : 2
+lines.markersize : 6
+legend.fontsize: 12
+mathtext.fontset: stixsans
+#font.family: Arial
+#savefig.dpi:600
