@@ -172,7 +172,7 @@ def make_graph(X, Y=None, threshold=0, dense_dim=100,  gene_data={},
     return graph
 
 
-def run_leiden(data, leiden_n_neighbors=300):
+def run_leiden(data, params ={}):
     """
     Performs Leiden community detection on given data.
 
@@ -185,17 +185,15 @@ def run_leiden(data, leiden_n_neighbors=300):
         [type]: [description]
     """
     import scanpy.api as sc
-    n_pcs = 0
     adata = sc.AnnData(data)
-    sc.pp.neighbors(adata, n_neighbors=leiden_n_neighbors,
-                    n_pcs=n_pcs, use_rep='X')
-    sc.tl.leiden(adata)
+    sc.pp.neighbors(adata, use_rep='X', n_neighbors = 300, n_pcs = 0)
+    sc.tl.leiden(adata, **params)
     pred = adata.obs['leiden'].to_list()
     pred = [int(x) for x in pred]
     return pred
 
 
-def evaluate(model, dataloader, n_clusters, plot=False, save=False, cluster=["KMeans"], use_cpu=False):
+def evaluate(model, dataloader, n_clusters, plot=False, save=False, cluster=["KMeans"], use_cpu=False, cluster_params ={}):
     """
     Test the graph autoencoder model.
 
@@ -265,7 +263,7 @@ def evaluate(model, dataloader, n_clusters, plot=False, save=False, cluster=["KM
     # Leiden
     if "Leiden" in cluster:
         l_start = time.time()
-        leiden_pred = run_leiden(z)
+        leiden_pred = run_leiden(z, cluster_params.get("Leiden", {}))
         ari_l = None
         nmi_l = None
         if y is not None:
@@ -303,7 +301,7 @@ def evaluate(model, dataloader, n_clusters, plot=False, save=False, cluster=["KM
     return scores
 
 
-def train(model, optim, n_epochs, dataloader, n_clusters, plot=False, save=False, cluster=["KMeans"], use_cpu=False):
+def train(model, optim, n_epochs, dataloader, n_clusters, plot=False, save=False, cluster=["KMeans"], use_cpu=False, cluster_params ={}):
     """
     Train the graph autoencoder model (model) with the given optimizer (optim)
     for n_epochs.
@@ -353,7 +351,7 @@ def train(model, optim, n_epochs, dataloader, n_clusters, plot=False, save=False
             continue
         elif epoch % plot == 0:
             score = evaluate(model, dataloader, n_clusters,
-                             cluster=cluster, use_cpu=use_cpu)
+                             cluster=cluster, use_cpu=use_cpu, cluster_params = cluster_params)
             print(f'ARI {score.get("kmeans_ari")}, {score.get("kmeans_sil")}')
             aris_kmeans.append(score["kmeans_ari"])
 
@@ -365,7 +363,7 @@ def train(model, optim, n_epochs, dataloader, n_clusters, plot=False, save=False
     # return model
 
     score = evaluate(model, dataloader, n_clusters, save=save,
-                     cluster=cluster, use_cpu=use_cpu)
+                     cluster=cluster, use_cpu=use_cpu, cluster_params = cluster_params)
     score["aris_kmeans"] = aris_kmeans
     print(f'ARI {score.get("kmeans_ari")}, {score.get("kmeans_sil")}')
     return score
